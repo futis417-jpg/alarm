@@ -19,18 +19,31 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Dar permisos de ejecucion a Gradle
+    - name: Diagnostico de carpetas y permisos
       run: |
-        cd futis417-jpg/alarm/alarm-0bfb564b6e7df8ed4e7b65cdfb53cc949ddec332
-        chmod +x gradlew
+        echo "=== CARPETAS EN LA RAIZ ==="
+        ls -la
+        
+        echo "=== BUSCANDO GRADLEW ==="
+        # Buscamos la ruta real del archivo ejecutable
+        REAL_PATH=$(find . -name "gradlew" -print -quit)
+        echo "El archivo gradlew esta en: $REAL_PATH"
+        
+        # Guardamos la carpeta contenedora para el siguiente paso
+        DIR_PATH=$(dirname "$REAL_PATH")
+        echo "DIR_PATH=$DIR_PATH" >> $GITHUB_ENV
+        
+        # Le damos los permisos de ejecucion directamente usando su ruta real encontrada
+        chmod +x "$REAL_PATH"
 
     - name: Compilar la aplicacion en modo Debug
       run: |
-        cd futis417-jpg/alarm/alarm-0bfb564b6e7df8ed4e7b65cdfb53cc949ddec332
+        cd "${{ env.DIR_PATH }}"
         ./gradlew assembleDebug
 
     - name: Guardar el archivo APK resultante
       uses: actions/upload-artifact@v4
       with:
         name: Despertador-APK
-        path: futis417-jpg/alarm/alarm-0bfb564b6e7df8ed4e7b65cdfb53cc949ddec332/app/build/outputs/apk/debug/app-debug.apk
+        path: |
+          **/build/outputs/apk/debug/app-debug.apk
