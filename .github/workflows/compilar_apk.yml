@@ -2,8 +2,13 @@ name: Compilar APK de Despertador
 
 on:
   push:
-    branches: [ main, master ] # Se ejecuta cuando subes cambios a tu rama principal
-  workflow_dispatch: # Esto te permite activar la compilación manualmente con un botón
+    branches: [ main, master ]
+  workflow_dispatch:
+
+# Aquí le decimos a GitHub que todos los comandos se ejecuten dentro de tu carpeta del proyecto
+defaults:
+  run:
+    working-directory: alarm-0bfb564b6e7df8ed4e7b65cdfb53cc949ddec332
 
 jobs:
   build:
@@ -29,4 +34,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Despertador-APK
-        path: app/build/outputs/apk/debug/app-debug.apk
+        # Apuntamos también a la ruta de salida dentro de tu carpeta
+        path: alarm-0bfb564b6e7df8ed4e7b65cdfb53cc949ddec332/app/build/outputs/apk/debug/app-debug.apk
