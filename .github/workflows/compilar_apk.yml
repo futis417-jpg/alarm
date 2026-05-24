@@ -19,16 +19,16 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Encontrar carpeta del proyecto y dar permisos a Gradle
+    - name: Dar permisos de ejecucion a Gradle usando ruta exacta
       run: |
-        GRADLEW_PATH=$(find . -name "gradlew" -print -quit)
-        PROJECT_DIR=$(dirname "$GRADLEW_PATH")
-        echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
-        chmod +x "$GRADLEW_PATH"
+        # Entramos directamente usando el comodin de la ruta que subio AI Studio
+        cd **/alarm-0bfb564b6e7df8ed4e7b65cdfb53cc949ddec332
+        chmod +x gradlew
+        echo "Ruta guardada con exito"
 
     - name: Compilar la aplicacion en modo Debug
       run: |
-        cd ${{ env.PROJECT_DIR }}
+        cd **/alarm-0bfb564b6e7df8ed4e7b65cdfb53cc949ddec332
         ./gradlew assembleDebug
 
     - name: Guardar el archivo APK resultante
